@@ -3,559 +3,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maksim Mkrtchyan / Portfolio</title>
-    <link rel="zstylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+    <title>Maxim Mkrtchyan / Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary: #3498db;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --text: #333;
+            --transition: all 0.3s ease;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+        }
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        .logo a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        .nav-links li a {
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            color: var(--dark);
+            transition: var(--transition);
+        }
+        .nav-links li a:hover {
+            color: var(--primary);
+        }
+        .burger {
+            display: none;
+            cursor: pointer;
+        }
+        main {
+            padding-top: 80px;
+        }
+        section {
+            padding: 4rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        .skills ul {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            list-style: none;
+        }
+        .skills li {
+            background: var(--light);
+            padding: 0.5rem;
+            text-align: center;
+            border-radius: 4px;
+        }
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .portfolio-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            aspect-ratio: 16/9;
+        }
+        .portfolio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        .portfolio-item:hover img {
+            transform: scale(1.05);
+        }
+        .item-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 1rem;
+            transform: translateY(100%);
+            transition: var(--transition);
+        }
+        .portfolio-item:hover .item-overlay {
+            transform: translateY(0);
+        }
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+        .contact-method i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .modal-content {
+            background: white;
+            margin: 2rem auto;
+            padding: 2rem;
+            max-width: 800px;
+            border-radius: 8px;
+            position: relative;
+        }
+        .close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .project-gallery {
+            margin: 1rem 0;
+        }
+        .gallery-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+            padding: 1rem 0;
+            scroll-snap-type: x mandatory;
+        }
+        .gallery-img {
+            scroll-snap-align: start;
+            height: 200px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+        .gallery-img:hover {
+            transform: scale(1.02);
+        }
+        .tech-used {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        .tech-used span {
+            background: var(--light);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        .image-viewer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+        }
+        #fullscreen-image {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        .close-viewer {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        .nav-arrows {
+            position: absolute;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .nav-arrow {
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background: white;
+                flex-direction: column;
+                align-items: center;
+                padding: 1rem 0;
+                transform: translateY(-150%);
+                transition: var(--transition);
+            }
+            .nav-links.active {
+                transform: translateY(0);
+            }
+            .burger {
+                display: block;
+            }
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-<style type="text/css">
-    /* Global Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-body {
-    line-height: 1.6;
-    color: #333;
-    background-color: #f9f9f9;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-/* Header & Navigation */
-header {
-    background-color: #2c3e50;
-    color: white;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 5%;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-}
-
-.nav-links li {
-    margin-left: 2rem;
-}
-
-.nav-links a {
-    transition: color 0.3s;
-}
-
-.nav-links a:hover {
-    color: #3498db;
-}
-
-.edit-btn {
-    background-color: #3498db;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.edit-btn:hover {
-    background-color: #2980b9;
-    color: white;
-}
-
-.burger {
-    display: none;
-    cursor: pointer;
-}
-
-.burger div {
-    width: 25px;
-    height: 3px;
-    background-color: white;
-    margin: 5px;
-    transition: all 0.3s ease;
-}
-
-/* Main Content */
-main {
-    padding-top: 80px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 100px 5% 50px;
-}
-
-section {
-    margin-bottom: 4rem;
-}
-
-h1 {
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    color: #2c3e50;
-    text-align: center;
-    position: relative;
-}
-
-h1::after {
-    content: '';
-    display: block;
-    width: 80px;
-    height: 4px;
-    background: #3498db;
-    margin: 10px auto;
-}
-
-h2 {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    color: #2c3e50;
-}
-
-h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #2c3e50;
-}
-
-/* About Section */
-.about-section {
-    padding: 2rem 0;
-}
-
-.about-content {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 2rem;
-}
-
-.about-text {
-    flex: 1;
-    min-width: 300px;
-}
-
-.about-text p {
-    margin-bottom: 1rem;
-}
-
-.skills {
-    flex: 0 0 300px;
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.skills ul {
-    list-style-position: inside;
-}
-
-.skills li {
-    margin-bottom: 0.5rem;
-}
-
-/* Portfolio Section */
-.portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-.portfolio-item {
-    position: relative;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-    cursor: pointer;
-    aspect-ratio: 4/3;
-}
-
-.portfolio-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-.portfolio-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.item-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 1rem;
-    transform: translateY(100%);
-    transition: transform 0.3s;
-}
-
-.portfolio-item:hover .item-overlay {
-    transform: translateY(0);
-}
-
-.item-overlay h3 {
-    color: white;
-    margin-bottom: 0.5rem;
-}
-
-.item-overlay p {
-    font-size: 0.9rem;
-    opacity: 0.9;
-}
-
-/* Contact Section */
-.contact-methods {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 2rem;
-    margin-top: 2rem;
-}
-
-.contact-method {
-    flex: 1;
-    min-width: 250px;
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
-}
-
-.contact-method:hover {
-    transform: translateY(-5px);
-}
-
-.contact-method i {
-    font-size: 2.5rem;
-    color: #3498db;
-    margin-bottom: 1rem;
-}
-
-.contact-method h3 {
-    margin-bottom: 0.5rem;
-}
-
-/* Modal Styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 2rem;
-    border-radius: 8px;
-    max-width: 900px;
-    width: 90%;
-    position: relative;
-    animation: modalopen 0.5s;
-}
-
-@keyframes modalopen {
-    from {
-        opacity: 0;
-        transform: translateY(-50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.close {
-    position: absolute;
-    right: 20px;
-    top: 10px;
-    font-size: 2rem;
-    font-weight: bold;
-    color: #aaa;
-    cursor: pointer;
-    transition: color 0.3s;
-}
-
-.close:hover {
-    color: #333;
-}
-
-.project-gallery {
-    margin: 2rem 0;
-}
-
-.gallery-scroll {
-    display: flex;
-    overflow-x: auto;
-    gap: 1rem;
-    padding-bottom: 1rem;
-    scrollbar-width: thin;
-    scrollbar-color: #3498db #f1f1f1;
-}
-
-.gallery-scroll::-webkit-scrollbar {
-    height: 8px;
-}
-
-.gallery-scroll::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-.gallery-scroll::-webkit-scrollbar-thumb {
-    background: #3498db;
-    border-radius: 10px;
-}
-
-.gallery-scroll::-webkit-scrollbar-thumb:hover {
-    background: #2980b9;
-}
-
-.gallery-img {
-    height: 300px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.3s;
-}
-
-.gallery-img:hover {
-    transform: scale(1.02);
-}
-
-.tech-used {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.tech-used span {
-    background-color: #3498db;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-}
-
-/* Fullscreen Image Viewer */
-.image-viewer {
-    display: none;
-    position: fixed;
-    z-index: 3000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    justify-content: center;
-    align-items: center;
-}
-
-.close-viewer {
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    color: white;
-    font-size: 3rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s;
-}
-
-.close-viewer:hover {
-    color: #3498db;
-}
-
-#fullscreen-image {
-    max-width: 90%;
-    max-height: 90%;
-    object-fit: contain;
-}
-
-/* Footer */
-footer {
-    background-color: #2c3e50;
-    color: white;
-    padding: 3rem 5% 1rem;
-}
-
-.footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 2rem;
-}
-
-.footer-section {
-    flex: 1;
-    min-width: 250px;
-}
-
-.footer-section h3 {
-    color: white;
-    margin-bottom: 1.5rem;
-    position: relative;
-}
-
-.footer-section h3::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -8px;
-    width: 50px;
-    height: 2px;
-    background-color: #3498db;
-}
-
-.footer-section ul {
-    list-style: none;
-}
-
-.footer-section ul li {
-    margin-bottom: 0.8rem;
-}
-
-.footer-section ul li a:hover {
-    color: #3498db;
-}
-
-.social-links {
-    display: flex;
-    gap: 1rem;
-}
-
-.social-links a {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    text-align: center;
-    line-height: 40px;
-    transition: background-color 0.3s;
-}
-
-.social-links a:hover {
-    background-color: #3498db;
-}
-
-.footer-bottom {
-    text-align: center;
-    padding-top: 2rem;
-    margin-top: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .nav-links {
-        position: absolute;
-        right: 0;
-        top: 80px;
-        background-color: #2c3e50;
-        width: 100%;
-        flex-direction: column;
-        align-items: center;
-        padding: 1rem 0;
-        clip-path: circle(0px at 90% -10%);
-        transition: all 0.5s ease-out;
-    }
-
-    .nav-links.active {
-        clip-path: circle(1000px at 90% -10%);
-    }
-
-    .nav-links li {
-        margin: 1rem 0;
-    }
-
-    .burger {
-        display: block;
-    }
-
-    .about-content {
-        flex-direction: column;
-    }
-
-    .skills {
-        flex: 1;
-    }
-
-    .modal-content {
-        margin: 10% auto;
-        width: 95%;
-    }
-}
-
-/* Animation for burger menu */
-.toggle .line1 {
-    transform: rotate(-45deg) translate(-5px, 6px);
-}
-.toggle .line2 {
-    opacity: 0;
-}
-.toggle .line3 {
-    transform: rotate(45deg) translate(-5px, -6px);
-}
-</style>
 <body>
     <header>
         <nav>
-            <div class="logo">Maxim Mkrtchyan <span/style="color: #3498db;"><a href="#portfolio"> Portfolio</a></span></div>
+            <div class="logo">Maxim Mkrtchyan <span style="color: var(--primary);"><a href="#portfolio">Portfolio</a></span></div>
             <ul class="nav-links">
                 <li><a href="#about">About Me</a></li>
                 <li><a href="#portfolio">Portfolio</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
             <div class="burger">
-                <div class="line1"></div>
-                <div class="line2"></div>
-                <div class="line3"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
             </div>
         </nav>
     </header>
 
     <main>
-        <section id="about" class="about-section">
+        <section id="about">
             <h1>About Me</h1>
             <div class="about-content">
                 <div class="about-text">
-                <p>I am a web developer with expertise in HTML, CSS, and JavaScript. I create responsive, user-friendly websites with clean code and modern design.<p>
-                <p>My journey in web development began a few years ago, and since then I have worked on many projects.</p>
-                <p>When I am not programming, I enjoy learning new technologies, contributing to open source projects, and sharing my knowledge with others.</p>
+                    <p>I am a web developer with expertise in HTML, CSS, and JavaScript. I create responsive, user-friendly websites with clean code and modern design.</p>
+                    <p>My journey in web development began a few years ago, and since then I have worked on many projects.</p>
+                    <p>When I am not programming, I enjoy learning new technologies, contributing to open source projects, and sharing my knowledge with others.</p>
                 </div>
                 <div class="skills">
                     <h3>My Skills</h3>
@@ -568,19 +305,16 @@ footer {
             </div>
         </section>
 
-        <section id="portfolio" class="portfolio-section">
+        <section id="portfolio">
             <h1>My Projects</h1>
             <div class="portfolio-grid">
-                <!-- Project 1 -->
                 <div class="portfolio-item" data-project="movie">
                     <img src="images/movie1.png" alt="Movie and Books Review">
                     <div class="item-overlay">
-                        <h3>Moie and Books Review</h3>
+                        <h3>Movie and Books Review</h3>
                         <p>Created with: HTML, CSS, JS</p>
                     </div>
                 </div>
-
-                <!-- Project 2 -->
                 <div class="portfolio-item" data-project="minigame">
                     <img src="images/1minigame.png" alt="Mini Games">
                     <div class="item-overlay">
@@ -588,8 +322,6 @@ footer {
                         <p>Created with: HTML, CSS, JS</p>
                     </div>
                 </div>
-
-                <!-- Project 3 -->
                 <div class="portfolio-item" data-project="wiki">
                     <img src="images/1wiki.png" alt="Wikipedia 2 - Fan Project">
                     <div class="item-overlay">
@@ -597,8 +329,6 @@ footer {
                         <p>Created with: HTML, CSS, JS</p>
                     </div>
                 </div>
-
-                <!-- Project 4 -->
                 <div class="portfolio-item" data-project="pixel">
                     <img src="images/1pixel.png" alt="Pixel Collector">
                     <div class="item-overlay">
@@ -606,8 +336,6 @@ footer {
                         <p>Created with: HTML, CSS, JS</p>
                     </div>
                 </div>
-
-                <!-- Project 5 -->
                 <div class="portfolio-item" data-project="store">
                     <img src="images/store1.png" alt="Store">
                     <div class="item-overlay">
@@ -615,8 +343,6 @@ footer {
                         <p>Created with: HTML, CSS, JS</p>
                     </div>
                 </div>
-
-                <!-- Project 6 -->
                 <div class="portfolio-item" data-project="tickets">
                     <img src="images/1toms.png" alt="TicketsCenter">
                     <div class="item-overlay">
@@ -624,8 +350,6 @@ footer {
                         <p>Created with: HTML, CSS, JS</p>
                     </div>
                 </div>
-
-                <!-- Project 7 -->
                 <div class="portfolio-item" data-project="mood">
                     <img src="images/1mood.png" alt="Mood Tracker">
                     <div class="item-overlay">
@@ -634,10 +358,9 @@ footer {
                     </div>
                 </div>
             </div>
-<br>           
         </section>
 
-        <section id="contact" class="contact-section">
+        <section id="contact">
             <h1>Contact Me</h1>
             <div class="contact-methods">
                 <div class="contact-method">
@@ -645,8 +368,9 @@ footer {
                     <h3>Email</h3>
                     <p>mikurasua@gmail.com</p>
                 </div>
+                <div class="contact-method">
                     <i class="fas fa-briefcase"></i>
-                    <h3><a href="https://www.freelancer.com/u/MAXIMarm?frm=MAXIMarm&sb=t"><span style="color: #3498db;">Freelancer</span></a></h3>
+                    <h3><a href="https://www.freelancer.com/u/MAXIMarm" style="color: var(--primary);">Freelancer</a></h3>
                 </div>
             </div>
         </section>
@@ -657,13 +381,13 @@ footer {
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Movie and Books Review</h2>
-            <p>A platform where users can review and rate their favorite movies and books. Features include user authentication, rating system, and comment sections.</p>
+            <p>A platform where users can review and rate their favorite movies and books.</p>
             <div class="project-gallery">
                 <div class="gallery-scroll">
-                    <img src="images/movie1.png" alt="Movie Review Screenshot 1" class="gallery-img">
-                    <img src="images/movie2.png" alt="Movie Review Screenshot 2" class="gallery-img">
-                    <img src="images/movie3.png" alt="Movie Review Screenshot 3" class="gallery-img">
-                    <img src="images/movie1end.png" alt="Movie Review Screenshot 4" class="gallery-img">
+                    <img src="images/movie1.png" class="gallery-img">
+                    <img src="images/movie2.png" class="gallery-img">
+                    <img src="images/movie3.png" class="gallery-img">
+                    <img src="images/movie1end.png" class="gallery-img">
                 </div>
             </div>
             <div class="tech-used">
@@ -804,22 +528,17 @@ footer {
         </div>
     </div>
 
-    <!-- Fullscreen Image Viewer -->
+    <!-- Fullscreen Image Viewer with Navigation -->
     <div id="image-viewer" class="image-viewer">
         <span class="close-viewer">&times;</span>
+        <div class="nav-arrows">
+            <div class="nav-arrow" id="prev-arrow">&#10094;</div>
+            <div class="nav-arrow" id="next-arrow">&#10095;</div>
+        </div>
         <img id="fullscreen-image" src="" alt="Fullscreen Image">
     </div>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#portfolio">Portfolio</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </div>
+     <footer>
             <div class="footer-section">
                 <h3>Contact Info</h3>
                 <p>Email: mikurasua@gmail.com</p>
@@ -831,125 +550,121 @@ footer {
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    // Mobile Navigation
-    const burger = document.querySelector('.burger');
-    const navLinks = document.querySelector('.nav-links');
-    
-    burger.addEventListener('click', function() {
-        navLinks.classList.toggle('active');
-        burger.classList.toggle('toggle');
-    });
+            // Mobile Navigation
+            const burger = document.querySelector('.burger');
+            const navLinks = document.querySelector('.nav-links');
+            
+            burger.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                burger.classList.toggle('active');
+            });
 
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Close mobile menu if open
-            if (navLinks.classList.contains('active')) {
-                navLinks.classList.remove('active');
-                burger.classList.remove('toggle');
-            }
-            
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 80,
-                    behavior: 'smooth'
+            // Smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
+                        burger.classList.remove('active');
+                    }
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
                 });
-            }
-        });
-    });
+            });
 
-    // Portfolio Modal Functionality
-    const portfolioItems = document.querySelectorAll('.portfolio-item');
-    const modals = document.querySelectorAll('.modal');
-    const closeButtons = document.querySelectorAll('.close');
-    
-    portfolioItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const projectName = this.getAttribute('data-project');
-            const modal = document.getElementById(`${projectName}-modal`);
-            if (modal) {
-                modal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            }
-        });
-    });
-    
-    closeButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const modal = this.closest('.modal');
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-    });
-    
-    window.addEventListener('click', function(e) {
-        if (e.target.classList.contains('modal')) {
-            e.target.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-    });
-
-    // Image Gallery Fullscreen View
-    const galleryImages = document.querySelectorAll('.gallery-img');
-    const imageViewer = document.getElementById('image-viewer');
-    const fullscreenImage = document.getElementById('fullscreen-image');
-    const closeViewer = document.querySelector('.close-viewer');
-    
-    galleryImages.forEach(img => {
-        img.addEventListener('click', function() {
-            fullscreenImage.src = this.src;
-            fullscreenImage.alt = this.alt;
-            imageViewer.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        });
-    });
-    
-    closeViewer.addEventListener('click', function() {
-        imageViewer.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    });
-    
-    window.addEventListener('click', function(e) {
-        if (e.target === imageViewer) {
-            imageViewer.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-    });
-
-    // Add animation when scrolling to sections
-    const sections = document.querySelectorAll('section');
-    
-    function checkScroll() {
-        sections.forEach(section => {
-            const sectionTop = section.getBoundingClientRect().top;
-            const windowHeight = window.innerHeight;
+            // Portfolio Modal Functionality
+            const portfolioItems = document.querySelectorAll('.portfolio-item');
+            const modals = document.querySelectorAll('.modal');
+            const closeButtons = document.querySelectorAll('.close');
             
-            if (sectionTop < windowHeight * 0.75) {
-                section.style.opacity = '1';
-                section.style.transform = 'translateY(0)';
+            portfolioItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const projectName = this.getAttribute('data-project');
+                    document.getElementById(`${projectName}-modal`).style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+            
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                });
+            });
+            
+            window.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal')) {
+                    e.target.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+
+            // Image Gallery with Navigation
+            const galleryImages = document.querySelectorAll('.gallery-img');
+            const imageViewer = document.getElementById('image-viewer');
+            const fullscreenImage = document.getElementById('fullscreen-image');
+            const closeViewer = document.querySelector('.close-viewer');
+            const prevArrow = document.getElementById('prev-arrow');
+            const nextArrow = document.getElementById('next-arrow');
+            
+            let currentImageIndex = 0;
+            let currentImages = [];
+            
+            galleryImages.forEach((img, index) => {
+                img.addEventListener('click', function() {
+                    const galleryScroll = this.closest('.gallery-scroll');
+                    currentImages = Array.from(galleryScroll.querySelectorAll('.gallery-img'));
+                    currentImageIndex = currentImages.indexOf(this);
+                    
+                    fullscreenImage.src = this.src;
+                    imageViewer.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+            
+            function navigateImage(direction) {
+                currentImageIndex += direction;
+                if (currentImageIndex < 0) currentImageIndex = currentImages.length - 1;
+                if (currentImageIndex >= currentImages.length) currentImageIndex = 0;
+                
+                fullscreenImage.src = currentImages[currentImageIndex].src;
             }
+            
+            prevArrow.addEventListener('click', (e) => {
+                e.stopPropagation();
+                navigateImage(-1);
+            });
+            
+            nextArrow.addEventListener('click', (e) => {
+                e.stopPropagation();
+                navigateImage(1);
+            });
+            
+            closeViewer.addEventListener('click', function() {
+                imageViewer.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            window.addEventListener('click', function(e) {
+                if (e.target === imageViewer) {
+                    imageViewer.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+
+            // Keyboard navigation for image viewer
+            document.addEventListener('keydown', function(e) {
+                if (imageViewer.style.display === 'flex') {
+                    if (e.key === 'ArrowLeft') navigateImage(-1);
+                    if (e.key === 'ArrowRight') navigateImage(1);
+                    if (e.key === 'Escape') {
+                        imageViewer.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    }
+                }
+            });
         });
-    }
-    
-    // Initialize sections with hidden state
-    sections.forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(20px)';
-        section.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    });
-    
-    // Check on load
-    checkScroll();
-    
-    // Check on scroll
-    window.addEventListener('scroll', checkScroll);
-});
     </script>
 </body>
 </html>
