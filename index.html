@@ -6,7 +6,7 @@
     <title>Maxim Mkrtchyan / Portfolio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-      :root {
+        :root {
     --primary: #c88a00;
     --dark-bg: #0f0f0f;
     --light-bg: #1e1e1e;
@@ -19,45 +19,102 @@
     --shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
+[data-theme="light"] {
+    --dark-bg: #ffffff;
+    --light-bg: #f5f5f5;
+    --text: #333333;
+    --card-bg: #ffffff;
+    --border: #e0e0e0;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Segoe UI', sans-serif;
     background: var(--dark-bg);
     color: var(--text);
-    margin: 0;
-    padding: 0;
     line-height: 1.6;
+    overflow-x: hidden;
+    transition: var(--transition);
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--dark-bg);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* Header */
 header {
-    background: #000;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
     padding: 1rem 2rem;
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 100;
+    width: 100%;
+    z-index: 1000;
     box-shadow: var(--shadow);
+    animation: slideDown 0.8s ease-out;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .logo {
     font-size: 1.5rem;
     font-weight: bold;
     color: var(--text);
+    animation: fadeInLeft 1s ease-out 0.5s both;
 }
 
 .logo a {
     text-decoration: none;
     color: var(--primary);
+    transition: var(--transition);
+}
+.logo a:hover {
+    text-shadow: 0 0 10px var(--primary);
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
 }
 
 .nav-links {
     display: flex;
     gap: 2rem;
     list-style: none;
+    animation: fadeInRight 1s ease-out 0.7s both;
 }
 
 .nav-links a {
@@ -65,25 +122,65 @@ nav {
     text-decoration: none;
     position: relative;
     transition: var(--transition);
+    padding: 0.5rem 0;
 }
-
 .nav-links a::after {
     content: '';
     position: absolute;
     width: 0%;
     height: 2px;
     left: 0;
-    bottom: -4px;
-    background: var(--primary);
+    bottom: 0;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
     transition: 0.3s ease;
 }
-
 .nav-links a:hover::after {
     width: 100%;
+}
+.nav-links a:hover {
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.theme-toggle {
+    background: none;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1.2rem;
+    animation: fadeInRight 1s ease-out 0.9s both;
+}
+.theme-toggle:hover {
+    background: var(--primary);
+    color: var(--dark-bg);
+    transform: rotate(180deg) scale(1.1);
 }
 
 .burger {
     display: none;
+    flex-direction: column;
+    cursor: pointer;
+    animation: fadeInRight 1s ease-out 0.9s both;
+}
+.burger .line {
+    width: 25px;
+    height: 3px;
+    background: var(--primary);
+    margin: 3px 0;
+    transition: 0.3s;
+    border-radius: 2px;
+}
+.burger.active .line:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+.burger.active .line:nth-child(2) {
+    opacity: 0;
+}
+.burger.active .line:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
 }
 
 main {
@@ -94,6 +191,13 @@ main {
 
 section {
     margin-bottom: 5rem;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease-out;
+}
+section.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 h1 {
@@ -101,221 +205,724 @@ h1 {
     border-left: 6px solid var(--primary);
     padding-left: 1rem;
     margin-bottom: 2rem;
-}
-
-.about-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-}
-
-.about-text, .skills {
-    flex: 1;
-    background: var(--card-bg);
-    padding: 1.5rem;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-}
-
-.skills ul {
-    list-style: none;
-    padding: 0;
-}
-
-.skills li {
-    background: var(--light-bg);
-    padding: 0.5rem 1rem;
-    margin-bottom: 0.5rem;
-    border-radius: var(--radius);
-    display: inline-block;
-}
-
-.portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 2rem;
-}
-
-.portfolio-item {
     position: relative;
     overflow: hidden;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    transition: transform 0.3s;
-    border: 1px solid var(--border);
 }
-
-.portfolio-item img {
-    width: 100%;
-    height: auto;
-    display: block;
-    transition: var(--transition);
-}
-
-.item-overlay {
+h1::after {
+    content: '';
     position: absolute;
     top: 0;
-    left: 0;
+    left: -100%;
     width: 100%;
     height: 100%;
-    background: rgba(15, 15, 15, 0.85);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: var(--transition);
-    text-align: center;
-    padding: 1rem;
+    background: linear-gradient(90deg, transparent, rgba(200, 138, 0, 0.2), transparent);
+    animation: shimmer 2s infinite;
 }
 
-.portfolio-item:hover .item-overlay {
-    opacity: 1;
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
 }
+        /* Main Content */
+        main {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: auto;
+        }
 
-.contact-methods {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-}
+        section {
+            margin-bottom: 5rem;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
 
-.contact-method {
-    flex: 1;
-    background: var(--card-bg);
-    padding: 1.5rem;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-    text-align: center;
-}
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-.contact-method i {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: var(--primary);
-}
+        h1 {
+            font-size: 2.5rem;
+            border-left: 6px solid var(--primary);
+            padding-left: 1rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 200;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(15, 15, 15, 0.95);
-    overflow-y: auto;
-    padding: 2rem;
-}
+        h1::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(200, 138, 0, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
 
-.modal-content {
-    background: var(--light-bg);
-    margin: auto;
-    padding: 2rem;
-    max-width: 800px;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    color: var(--text);
-}
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
 
-.modal-content h2 {
-    color: var(--primary);
-}
+        /* About Section */
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
 
-.close {
-    float: right;
-    font-size: 2rem;
-    cursor: pointer;
-    color: var(--text);
-}
+        .about-text, .skills {
+            flex: 1;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
 
-.project-gallery {
-    margin-top: 1rem;
-}
+        .about-text::before, .skills::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: 0.5s ease;
+        }
 
-.gallery-scroll {
-    display: flex;
-    overflow-x: auto;
-    gap: 1rem;
-    padding: 1rem 0;
-}
+        .about-text:hover::before, .skills:hover::before {
+            left: 0;
+        }
 
-.gallery-img {
-    border-radius: var(--radius);
-    height: 150px;
-    object-fit: cover;
-    box-shadow: var(--shadow);
-}
+        .about-text:hover, .skills:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
 
-.tech-used {
-    margin-top: 1rem;
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
+        .about-text p {
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease-out both;
+        }
 
-.tech-used span {
-    background: var(--primary);
-    color: #000;
-    padding: 0.3rem 1rem;
-    border-radius: 20px;
-    font-weight: bold;
-}
+        .about-text p:nth-child(2) {
+            animation-delay: 0.2s;
+        }
 
-footer {
-    background: #000;
-    color: #888;
-    padding: 2rem;
-    text-align: center;
-    border-top: 1px solid var(--border);
-}
+        .about-text p:nth-child(3) {
+            animation-delay: 0.4s;
+        }
 
-.footer-section h3 {
-    color: var(--primary);
-}
+        .skills ul {
+            list-style: none;
+            padding: 0;
+        }
 
-.footer-bottom {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-}
+        .skills li {
+            background: var(--light-bg);
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 0.8rem;
+            border-radius: var(--radius);
+            display: inline-block;
+            margin-right: 0.5rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            animation: slideInRight 0.6s ease-out both;
+        }
 
-@media (max-width: 768px) {
-    .about-content, .contact-methods {
-        flex-direction: column;
-    }
+        .skills li:nth-child(1) { animation-delay: 0.1s; }
+        .skills li:nth-child(2) { animation-delay: 0.2s; }
+        .skills li:nth-child(3) { animation-delay: 0.3s; }
 
-    .nav-links {
-        display: none;
-    }
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
 
-    .burger {
-        display: block;
-    }
-}
+        .skills li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(200, 138, 0, 0.2), transparent);
+            transition: 0.5s ease;
+        }
 
+        .skills li:hover::before {
+            left: 100%;
+        }
+
+        .skills li:hover {
+            background: var(--primary);
+            color: var(--dark-bg);
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        /* Portfolio Grid */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .portfolio-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            animation: fadeInUp 0.8s ease-out both;
+        }
+
+        .portfolio-item:nth-child(1) { animation-delay: 0.1s; }
+        .portfolio-item:nth-child(2) { animation-delay: 0.2s; }
+        .portfolio-item:nth-child(3) { animation-delay: 0.3s; }
+        .portfolio-item:nth-child(4) { animation-delay: 0.4s; }
+        .portfolio-item:nth-child(5) { animation-delay: 0.5s; }
+        .portfolio-item:nth-child(6) { animation-delay: 0.6s; }
+        .portfolio-item:nth-child(7) { animation-delay: 0.7s; }
+
+        .portfolio-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+            transition: var(--transition);
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .portfolio-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .item-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(15, 15, 15, 0.9), rgba(200, 138, 0, 0.8));
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: var(--transition);
+            text-align: center;
+            padding: 2rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .portfolio-item:hover .item-overlay {
+            opacity: 1;
+        }
+
+        .item-overlay h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .item-overlay p {
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .portfolio-item:hover .item-overlay h3,
+        .portfolio-item:hover .item-overlay p {
+            transform: translateY(0);
+        }
+
+        /* Contact Section */
+        .contact-methods {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .contact-method {
+            flex: 1;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-method::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            opacity: 0;
+            transition: var(--transition);
+            transform: scale(0);
+        }
+
+        .contact-method:hover::before {
+            opacity: 0.1;
+            transform: scale(1);
+        }
+
+        .contact-method:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .contact-method i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            transition: var(--transition);
+            position: relative;
+            z-index: 2;
+        }
+
+        .contact-method:hover i {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .contact-method h3,
+        .contact-method p {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            overflow-y: auto;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            margin: auto;
+            padding: 2rem;
+            max-width: 900px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            color: var(--text);
+            position: relative;
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-content h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .close:hover {
+            color: var(--primary);
+            background: rgba(200, 138, 0, 0.2);
+            transform: rotate(90deg);
+        }
+
+        /* Gallery Styles */
+        .project-gallery {
+            margin-top: 2rem;
+        }
+
+        .gallery-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+            padding: 1rem 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--dark-bg);
+        }
+
+        .gallery-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .gallery-scroll::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        .gallery-img {
+            border-radius: var(--radius);
+            height: 150px;
+            min-width: 200px;
+            object-fit: cover;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .gallery-img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Full Screen Image Viewer */
+        .image-viewer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .viewer-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fullscreen-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.8);
+        }
+
+        .viewer-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(200, 138, 0, 0.8);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: var(--transition);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .viewer-nav:hover {
+            background: var(--primary);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .prev-arrow {
+            left: -80px;
+        }
+
+        .next-arrow {
+            right: -80px;
+        }
+
+        .close-viewer {
+            position: absolute;
+            top: -60px;
+            right: 0;
+            background: rgba(200, 138, 0, 0.8);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: var(--transition);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-viewer:hover {
+            background: var(--primary);
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        /* Tech Used */
+        .tech-used {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tech-used span {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--dark-bg);
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: var(--transition);
+            animation: bounceIn 0.6s ease-out both;
+        }
+
+        .tech-used span:nth-child(1) { animation-delay: 0.1s; }
+        .tech-used span:nth-child(2) { animation-delay: 0.2s; }
+        .tech-used span:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            70% { transform: scale(0.9); }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .tech-used span:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 5px 15px rgba(200, 138, 0, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            background: #000;
+            color: #888;
+            padding: 3rem 2rem 1rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            animation: slideIn 2s ease-out infinite;
+        }
+
+        @keyframes slideIn {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .footer-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-bottom {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(0, 0, 0, 0.95);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 2rem;
+                transform: translateY(-100vh);
+                transition: var(--transition);
+                gap: 1rem;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .burger {
+                display: flex;
+            }
+
+            .about-content,
+            .contact-methods {
+                flex-direction: column;
+            }
+
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .prev-arrow,
+            .next-arrow {
+                position: fixed;
+            }
+
+            .prev-arrow {
+                left: 20px;
+            }
+
+            .next-arrow {
+                right: 20px;
+            }
+
+            .close-viewer {
+                top: 20px;
+                right: 20px;
+            }
+        }
+
+        /* Intersection Observer Animation */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Floating elements */
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Pulse animation for buttons */
+        .pulse:hover {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
     <header>
         <nav>
-            <div class="logo">Maxim Mkrtchyan <span style="color: var(--primary);"><a href="#portfolio">Portfolio</a></span></div>
-            <ul class="nav-links">
-                <li><a href="#about">About Me</a></li>
-                <li><a href="#portfolio">Portfolio</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <div class="burger">
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
+            <div class="logo">
+                <a href="#home">Maxim Mkrtchyan</a>
+                <span style="color: var(--primary);"> Portfolio</span>
+            </div>
+            <div class="nav-container">
+                <ul class="nav-links">
+                    <li><a href="#about">About Me</a></li>
+                    <li><a href="#portfolio">Portfolio</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <button class="theme-toggle" id="theme-toggle" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="burger">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
             </div>
         </nav>
     </header>
 
+
+
     <main>
-        <section id="about">
+        <section id="about" class="animate-on-scroll">
             <h1>About Me</h1>
             <div class="about-content">
                 <div class="about-text">
@@ -326,15 +933,15 @@ footer {
                 <div class="skills">
                     <h3>My Skills</h3>
                     <ul>
-                        <li>HTML5</li>
-                        <li>CSS</li>
-                        <li>JavaScript</li>
+                        <li class="floating">HTML5</li>
+                        <li class="floating">CSS3</li>
+                        <li class="floating">JavaScript</li>
                     </ul>
                 </div>
             </div>
         </section>
 
-        <section id="portfolio">
+        <section id="portfolio" class="animate-on-scroll">
             <h1>My Projects</h1>
             <div class="portfolio-grid">
                 <div class="portfolio-item" data-project="movie">
@@ -389,34 +996,50 @@ footer {
             </div>
         </section>
 
-        <section id="contact">
+        <section id="contact" class="animate-on-scroll">
             <h1>Contact Me</h1>
             <div class="contact-methods">
-                <div class="contact-method">
-                    <i class="fas fa-envelope"></i>
+                <div class="contact-method pulse">
+                    <i class="fas fa-envelope floating"></i>
                     <h3>Email</h3>
                     <p>mikurasua@gmail.com</p>
                 </div>
-                <div class="contact-method">
-                    <i class="fas fa-briefcase"></i>
+                <div class="contact-method pulse">
+                    <i class="fas fa-briefcase floating"></i>
                     <h3><a href="https://www.freelancer.com/u/MAXIMarm" style="color: var(--primary);" target="_blank">Freelancer</a></h3>
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- Full Screen Image Viewer -->
+    <div id="image-viewer" class="image-viewer">
+        <div class="viewer-content">
+            <button class="close-viewer" title="Close">
+                <i class="fas fa-times"></i>
+            </button>
+            <button class="viewer-nav prev-arrow" id="prev-arrow" title="Previous">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <img id="fullscreen-image" class="fullscreen-image" src="" alt="Full screen view">
+            <button class="viewer-nav next-arrow" id="next-arrow" title="Next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- Project Modals -->
     <div id="movie-modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Movie and Books Review</h2>
-            <p>A platform where users can review and rate their favorite movies and books.</p>
+            <p>A platform where users can review and rate their favorite movies and books. Features include user authentication, rating system, and detailed reviews.</p>
             <div class="project-gallery">
                 <div class="gallery-scroll">
-                    <img src="images/movie1.png" class="gallery-img">
-                    <img src="images/movie2.png" class="gallery-img">
-                    <img src="images/movie3.png" class="gallery-img">
-                    <img src="images/movie1end.png" class="gallery-img">
+                    <img src="images/movie1.png" class="gallery-img" alt="Movie Review Homepage">
+                    <img src="images/movie2.png" class="gallery-img" alt="Movie Review Details">
+                    <img src="images/movie3.png" class="gallery-img" alt="Movie Review Form">
+                    <img src="images/movie1end.png" class="gallery-img" alt="Movie Review Results">
                 </div>
             </div>
             <div class="tech-used">
@@ -431,14 +1054,14 @@ footer {
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Mini Games Collection</h2>
-            <p>A collection of small, interactive games built with vanilla JavaScript. Includes memory games, puzzles, and simple arcade-style games.</p>
+            <p>A collection of small, interactive games built with vanilla JavaScript. Includes memory games, puzzles, and simple arcade-style games with score tracking and local storage.</p>
             <div class="project-gallery">
                 <div class="gallery-scroll">
-                    <img src="images/1minigame.png" alt="Mini Game Screenshot 1" class="gallery-img">
-                    <img src="images/2minigame.png" alt="Mini Game Screenshot 2" class="gallery-img">
-                    <img src="images/3minigame.png" alt="Mini Game Screenshot 3" class="gallery-img">
-                    <img src="images/4minigame.png" alt="Mini Game Screenshot 4" class="gallery-img">
-                    <img src="images/5minigame.png" alt="Mini Game Screenshot 5" class="gallery-img">
+                    <img src="images/1minigame.png" alt="Mini Game Menu" class="gallery-img">
+                    <img src="images/2minigame.png" alt="Memory Game" class="gallery-img">
+                    <img src="images/3minigame.png" alt="Puzzle Game" class="gallery-img">
+                    <img src="images/4minigame.png" alt="Arcade Game" class="gallery-img">
+                    <img src="images/5minigame.png" alt="Score Board" class="gallery-img">
                 </div>
             </div>
             <div class="tech-used">
@@ -453,14 +1076,14 @@ footer {
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Wikipedia 2 - Fan Project</h2>
-            <p>A fan-made alternative interface for Wikipedia with enhanced search capabilities and a more modern UI design.</p>
+            <p>A fan-made alternative interface for Wikipedia with enhanced search capabilities, modern UI design, and improved user experience with dark mode support.</p>
             <div class="project-gallery">
                 <div class="gallery-scroll">
-                    <img src="images/1wiki.png" alt="Wikipedia Screenshot 1" class="gallery-img">
-                    <img src="images/2wiki.png" alt="Wikipedia Screenshot 2" class="gallery-img">
-                    <img src="images/3wiki.png" alt="Wikipedia Screenshot 3" class="gallery-img">
-                    <img src="images/4wiki.png" alt="Wikipedia Screenshot 4" class="gallery-img">
-                    <img src="images/5wiki.png" alt="Wikipedia Screenshot 5" class="gallery-img">
+                    <img src="images/1wiki.png" alt="Wikipedia Homepage" class="gallery-img">
+                    <img src="images/2wiki.png" alt="Search Results" class="gallery-img">
+                    <img src="images/3wiki.png" alt="Article View" class="gallery-img">
+                    <img src="images/4wiki.png" alt="Dark Mode" class="gallery-img">
+                    <img src="images/5wiki.png" alt="Mobile View" class="gallery-img">
                 </div>
             </div>
             <div class="tech-used">
@@ -475,13 +1098,13 @@ footer {
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Pixel Collector</h2>
-            <p>A creative web app that lets users collect and arrange pixel art. Includes a drawing tool and gallery for sharing creations.</p>
+            <p>A creative web app that lets users collect and arrange pixel art. Includes a drawing tool, color palette, gallery for sharing creations, and export functionality.</p>
             <div class="project-gallery">
                 <div class="gallery-scroll">
-                    <img src="images/1pixel.png" alt="Pixel Collector Screenshot 1" class="gallery-img">
-                    <img src="images/2pixel.png" alt="Pixel Collector Screenshot 2" class="gallery-img">
-                    <img src="images/3pixel.png" alt="Pixel Collector Screenshot 3" class="gallery-img">
-                    <img src="images/4pixel.png" alt="Pixel Collector Screenshot 4" class="gallery-img">
+                    <img src="images/1pixel.png" alt="Pixel Art Canvas" class="gallery-img">
+                    <img src="images/2pixel.png" alt="Color Palette" class="gallery-img">
+                    <img src="images/3pixel.png" alt="Art Gallery" class="gallery-img">
+                    <img src="images/4pixel.png" alt="Drawing Tools" class="gallery-img">
                 </div>
             </div>
             <div class="tech-used">
@@ -496,13 +1119,13 @@ footer {
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>E-commerce Store</h2>
-            <p>A fully responsive online store with product categories, shopping cart functionality, and checkout process.</p>
+            <p>A fully responsive online store with product categories, shopping cart functionality, checkout process, and payment integration simulation.</p>
             <div class="project-gallery">
                 <div class="gallery-scroll">
-                    <img src="images/store1.png" alt="Store Screenshot 1" class="gallery-img">
-                    <img src="images/store2.png" alt="Store Screenshot 2" class="gallery-img">
-                    <img src="images/store3.png" alt="Store Screenshot 3" class="gallery-img">
-                    <img src="images/store4.png" alt="Store Screenshot 4" class="gallery-img">
+                    <img src="images/store1.png" alt="Store Homepage" class="gallery-img">
+                    <img src="images/store2.png" alt="Product Catalog" class="gallery-img">
+                    <img src="images/store3.png" alt="Shopping Cart" class="gallery-img">
+                    <img src="images/store4.png" alt="Checkout Process" class="gallery-img">
                 </div>
             </div>
             <div class="tech-used">
@@ -517,15 +1140,15 @@ footer {
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>TicketsCenter</h2>
-            <p>A ticket booking platform for events and concerts with seat selection, payment processing, and email confirmation.</p>
+            <p>A comprehensive ticket booking platform for events and concerts with interactive seat selection, payment processing simulation, and email confirmation system.</p>
             <div class="project-gallery">
                 <div class="gallery-scroll">
-                    <img src="images/1toms.png" alt="TicketsCenter Screenshot 1" class="gallery-img">
-                    <img src="images/2toms.png" alt="TicketsCenter Screenshot 2" class="gallery-img">
-                    <img src="images/3toms.png" alt="TicketsCenter Screenshot 3" class="gallery-img">
-                    <img src="images/4toms.png" alt="TicketsCenter Screenshot 4" class="gallery-img">
-                    <img src="images/5toms.png" alt="TicketsCenter Screenshot 5" class="gallery-img">
-                    <img src="images/6toms.png" alt="TicketsCenter Screenshot 6" class="gallery-img">
+                    <img src="images/1toms.png" alt="Tickets Homepage" class="gallery-img">
+                    <img src="images/2toms.png" alt="Event Listings" class="gallery-img">
+                    <img src="images/3toms.png" alt="Seat Selection" class="gallery-img">
+                    <img src="images/4toms.png" alt="Booking Form" class="gallery-img">
+                    <img src="images/5toms.png" alt="Payment Process" class="gallery-img">
+                    <img src="images/6toms.png" alt="Confirmation" class="gallery-img">
                 </div>
             </div>
             <div class="tech-used">
@@ -540,13 +1163,13 @@ footer {
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Mood Tracker</h2>
-            <p>A personal mood tracking application that helps users monitor their emotional well-being over time with charts and statistics.</p>
+            <p>A personal mood tracking application that helps users monitor their emotional well-being over time with interactive charts, statistics, and insightful analytics.</p>
             <div class="project-gallery">
                 <div class="gallery-scroll">
-                    <img src="images/1mood.png" alt="Mood Tracker Screenshot 1" class="gallery-img">
-                    <img src="images/2mood.png" alt="Mood Tracker Screenshot 2" class="gallery-img">
-                    <img src="images/3mood.png" alt="Mood Tracker Screenshot 3" class="gallery-img">
-                    <img src="images/4mood.png" alt="Mood Tracker Screenshot 4" class="gallery-img">
+                    <img src="images/1mood.png" alt="Mood Dashboard" class="gallery-img">
+                    <img src="images/2mood.png" alt="Mood Entry" class="gallery-img">
+                    <img src="images/3mood.png" alt="Analytics Charts" class="gallery-img">
+                    <img src="images/4mood.png" alt="History View" class="gallery-img">
                 </div>
             </div>
             <div class="tech-used">
@@ -557,21 +1180,11 @@ footer {
         </div>
     </div>
 
-    <!-- Fullscreen Image Viewer with Navigation -->
-    <div id="image-viewer" class="image-viewer">
-        <span class="close-viewer">&times;</span>
-        <div class="nav-arrows">
-            <div class="nav-arrow" id="prev-arrow">&#10094;</div>
-            <div class="nav-arrow" id="next-arrow">&#10095;</div>
+    <footer>
+        <div class="footer-section">
+            <h3>Contact Info</h3>
+            <p>Email: mikurasua@gmail.com</p>
         </div>
-        <img id="fullscreen-image" src="" alt="Fullscreen Image">
-    </div>
-
-     <footer>
-            <div class="footer-section">
-                <h3>Contact Info</h3>
-                <p>Email: mikurasua@gmail.com</p>
-            </div>
         <div class="footer-bottom">
             <p>&copy; 2025 Maxim Mkrtchyan. All Rights Reserved.</p>
         </div>
@@ -579,6 +1192,32 @@ footer {
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Theme Toggle Functionality
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = themeToggle.querySelector('i');
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            
+            // Set initial theme
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            updateThemeIcon(currentTheme);
+            
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+            
+            function updateThemeIcon(theme) {
+                if (theme === 'dark') {
+                    themeIcon.className = 'fas fa-sun';
+                } else {
+                    themeIcon.className = 'fas fa-moon';
+                }
+            }
+
             // Mobile Navigation
             const burger = document.querySelector('.burger');
             const navLinks = document.querySelector('.nav-links');
@@ -588,7 +1227,7 @@ footer {
                 burger.classList.toggle('active');
             });
 
-            // Smooth scrolling
+            // Smooth scrolling with offset for fixed header
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -596,10 +1235,35 @@ footer {
                         navLinks.classList.remove('active');
                         burger.classList.remove('active');
                     }
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    
+                    const target = document.querySelector(this.getAttribute('href'));
+                    const headerHeight = document.querySelector('header').offsetHeight;
+                    const targetPosition = target.offsetTop - headerHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
                         behavior: 'smooth'
                     });
                 });
+            });
+
+            // Intersection Observer for scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all sections with animate-on-scroll class
+            document.querySelectorAll('.animate-on-scroll').forEach(section => {
+                observer.observe(section);
             });
 
             // Portfolio Modal Functionality
@@ -610,8 +1274,14 @@ footer {
             portfolioItems.forEach(item => {
                 item.addEventListener('click', function() {
                     const projectName = this.getAttribute('data-project');
-                    document.getElementById(`${projectName}-modal`).style.display = 'block';
+                    const modal = document.getElementById(`${projectName}-modal`);
+                    modal.style.display = 'block';
                     document.body.style.overflow = 'hidden';
+                    
+                    // Animate modal content
+                    setTimeout(() => {
+                        modal.querySelector('.modal-content').style.transform = 'translateY(0)';
+                    }, 10);
                 });
             });
             
@@ -629,7 +1299,7 @@ footer {
                 }
             });
 
-            // Image Gallery with Navigation
+            // Full Screen Image Viewer
             const galleryImages = document.querySelectorAll('.gallery-img');
             const imageViewer = document.getElementById('image-viewer');
             const fullscreenImage = document.getElementById('fullscreen-image');
@@ -647,8 +1317,17 @@ footer {
                     currentImageIndex = currentImages.indexOf(this);
                     
                     fullscreenImage.src = this.src;
+                    fullscreenImage.alt = this.alt;
                     imageViewer.style.display = 'flex';
                     document.body.style.overflow = 'hidden';
+                    
+                    // Animate image entrance
+                    fullscreenImage.style.transform = 'scale(0.8)';
+                    fullscreenImage.style.opacity = '0';
+                    setTimeout(() => {
+                        fullscreenImage.style.transform = 'scale(1)';
+                        fullscreenImage.style.opacity = '1';
+                    }, 10);
                 });
             });
             
@@ -657,7 +1336,16 @@ footer {
                 if (currentImageIndex < 0) currentImageIndex = currentImages.length - 1;
                 if (currentImageIndex >= currentImages.length) currentImageIndex = 0;
                 
-                fullscreenImage.src = currentImages[currentImageIndex].src;
+                // Animate image transition
+                fullscreenImage.style.transform = 'scale(0.9)';
+                fullscreenImage.style.opacity = '0.5';
+                
+                setTimeout(() => {
+                    fullscreenImage.src = currentImages[currentImageIndex].src;
+                    fullscreenImage.alt = currentImages[currentImageIndex].alt;
+                    fullscreenImage.style.transform = 'scale(1)';
+                    fullscreenImage.style.opacity = '1';
+                }, 150);
             }
             
             prevArrow.addEventListener('click', (e) => {
@@ -675,7 +1363,7 @@ footer {
                 document.body.style.overflow = 'auto';
             });
             
-            window.addEventListener('click', function(e) {
+            imageViewer.addEventListener('click', function(e) {
                 if (e.target === imageViewer) {
                     imageViewer.style.display = 'none';
                     document.body.style.overflow = 'auto';
@@ -692,6 +1380,84 @@ footer {
                         document.body.style.overflow = 'auto';
                     }
                 }
+            });
+
+            // Add parallax effect to hero section
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const hero = document.querySelector('.hero');
+                const rate = scrolled * -0.5;
+                
+                if (hero) {
+                    hero.style.transform = `translateY(${rate}px)`;
+                }
+            });
+
+            // Add floating animation delay randomization
+            const floatingElements = document.querySelectorAll('.floating');
+            floatingElements.forEach((element, index) => {
+                element.style.animationDelay = `${index * 0.5}s`;
+            });
+
+            // Preload images for better performance
+            const images = [
+                'images/movie1.png', 'images/movie2.png', 'images/movie3.png', 'images/movie1end.png',
+                'images/1minigame.png', 'images/2minigame.png', 'images/3minigame.png', 'images/4minigame.png', 'images/5minigame.png',
+                'images/1wiki.png', 'images/2wiki.png', 'images/3wiki.png', 'images/4wiki.png', 'images/5wiki.png',
+                'images/1pixel.png', 'images/2pixel.png', 'images/3pixel.png', 'images/4pixel.png',
+                'images/store1.png', 'images/store2.png', 'images/store3.png', 'images/store4.png',
+                'images/1toms.png', 'images/2toms.png', 'images/3toms.png', 'images/4toms.png', 'images/5toms.png', 'images/6toms.png',
+                'images/1mood.png', 'images/2mood.png', 'images/3mood.png', 'images/4mood.png'
+            ];
+
+            images.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+
+            // Add scroll-to-top functionality
+            let scrollTopBtn = document.createElement('button');
+            scrollTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+            scrollTopBtn.className = 'scroll-top-btn';
+            scrollTopBtn.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: var(--primary);
+                color: var(--dark-bg);
+                border: none;
+                padding: 1rem;
+                border-radius: 50%;
+                cursor: pointer;
+                font-size: 1.2rem;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+                z-index: 1000;
+                width: 50px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            
+            document.body.appendChild(scrollTopBtn);
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    scrollTopBtn.style.opacity = '1';
+                    scrollTopBtn.style.visibility = 'visible';
+                } else {
+                    scrollTopBtn.style.opacity = '0';
+                    scrollTopBtn.style.visibility = 'hidden';
+                }
+            });
+            
+            scrollTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             });
         });
     </script>
