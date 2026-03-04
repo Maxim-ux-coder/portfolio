@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maxim Mkrtchyan / Portfolio</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="animated-logo">
+            <span class="logo-m">M</span>
+            <div class="logo-particles" id="logo-particles"></div>
+        </div>
+    </div>
+
+    <!-- Animated Background Particles -->
+    <div class="particles" id="particles"></div>
+
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="#about"><span class="logo-m">M</span>axim Mkrtchyan</a>
+                <span style="color: var(--primary);"> Portfolio</span>
+            </div>
+            <div class="nav-container">
+                <ul class="nav-links">
+                    <li><a href="#about"><i class="fas fa-user"></i> <span>About Me</span></a></li>
+                    <li><a href="#portfolio"><i class="fas fa-code"></i> <span>Portfolio</span></a></li>
+                    <li><a href="#contact"><i class="fas fa-envelope"></i> <span>Contact</span></a></li>
+                </ul>
+                <button class="theme-toggle" id="theme-toggle" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="burger">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
+
+    <main>
+        <section id="about" class="animate-on-scroll">
+            <h1>About Me</h1>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>I am a web developer with expertise in HTML, CSS, and JavaScript. I create responsive, user-friendly websites with clean code and modern design.</p>
+                    <p>My journey in web development began a few years ago, and since then I have worked on many projects that showcase my passion for creating engaging digital experiences.</p>
+                    <p>When I am not programming, I enjoy learning new technologies, contributing to open source projects, and sharing my knowledge with others in the developer community.</p>
+                </div>
+                <div class="skills">
+                    <h3>My Skills</h3>
+                    <ul>
+                        <li class="floating">HTML5</li>
+                        <li class="floating">CSS3</li>
+                        <li class="floating">JavaScript</li>
+                        <li class="floating">Responsive Design</li>
+                        <li class="floating">UI/UX</li>
+                        <li class="floating">Performance Optimization</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="portfolio" class="animate-on-scroll">
+            <h1>My Projects</h1>
+            <div class="portfolio-grid">
+                <div class="portfolio-item" data-project="movie">
+                    <img src="images/movie1.png" alt="Movie and Books Review">
+                    <div class="item-overlay">
+                        <h3>Movie and Books Review</h3>
+                        <p>Created with: HTML, CSS, JS</p>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-project="minigame">
+                    <img src="images/1minigame.png" alt="Mini Games">
+                    <div class="item-overlay">
+                        <h3>Mini Games</h3>
+                        <p>Created with: HTML, CSS, JS</p>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-project="wiki">
+                    <img src="images/1wiki.png" alt="Wikipedia 2 - Fan Project">
+                    <div class="item-overlay">
+                        <h3>Wikipedia 2 - Fan Project</h3>
+                        <p>Created with: HTML, CSS, JS</p>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-project="pixel">
+                    <img src="images/1pixel.png" alt="Pixel Collector">
+                    <div class="item-overlay">
+                        <h3>Pixel Collector</h3>
+                        <p>Created with: HTML, CSS, JS</p>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-project="store">
+                    <img src="images/store1.png" alt="Store">
+                    <div class="item-overlay">
+                        <h3>Store</h3>
+                        <p>Created with: HTML, CSS, JS</p>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-project="tickets">
+                    <img src="images/1toms.png" alt="TicketsCenter">
+                    <div class="item-overlay">
+                        <h3>TicketsCenter</h3>
+                        <p>Created with: HTML, CSS, JS</p>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-project="mood">
+                    <img src="images/1mood.png" alt="Mood Tracker">
+                    <div class="item-overlay">
+                        <h3>Mood Tracker</h3>
+                        <p>Created with: HTML, CSS, JS</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="animate-on-scroll">
+            <h1>Contact Me</h1>
+            <div class="contact-methods">
+                <div class="contact-method pulse">
+                    <i class="fas fa-envelope floating"></i>
+                    <h3>Email</h3>
+                    <p>mikurasua@gmail.com</p>
+                </div>
+                <div class="contact-method pulse">
+                    <i class="fas fa-briefcase floating"><a href="https://www.freelancer.com/u/MAXIMarm"></a></i>
+                    <h3><a href="https://www.freelancer.com/u/MAXIMarm" style="color: var(--primary);" target="_blank">Freelancer</a></h3>
+                </div>
+                <div class="contact-method pulse">
+                    <i class="fab fa-telegram-plane floating"><a href="https://t.me/maximalxp"></a></i>
+                    <h3><a href="https://t.me/maximalxp" style="color: var(--primary);" target="_blank">Telegram</a></h3>
+                    <p>@MaximalXP</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Full Screen Image Viewer -->
+    <div id="image-viewer" class="image-viewer">
+        <div class="viewer-content">
+            <button class="close-viewer" title="Close">
+                <i class="fas fa-times"></i>
+            </button>
+            <button class="viewer-nav prev-arrow" id="prev-arrow" title="Previous">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <img id="fullscreen-image" class="fullscreen-image" src="" alt="Full screen view">
+            <button class="viewer-nav next-arrow" id="next-arrow" title="Next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Project Modals -->
+    <div id="movie-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Movie and Books Review</h2>
+            <p>A dynamic and user-friendly platform dedicated to reviewing both movies and books, designed to help users explore and rate their favorites with ease. It features two main categories—Books and Movies—each offering detailed descriptions, user ratings, and personalized modal windows that display expanded information for every title. The system encourages engagement through interactive design, sleek visuals, and a clear layout optimized for both desktop and mobile users.</p>
+            <div class="project-gallery">
+                <div class="gallery-scroll">
+                    <img src="images/movie1.png" class="gallery-img" alt="Movie Review Homepage">
+                    <img src="images/movie2.png" class="gallery-img" alt="Movie Review Details">
+                    <img src="images/movie3.png" class="gallery-img" alt="Movie Review Form">
+                    <img src="images/movie1end.png" class="gallery-img" alt="Movie Review Results">
+                </div>
+            </div>
+            <div class="tech-used">
+                <span>HTML</span>
+                <span>CSS</span>
+                <span>JavaScript</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="minigame-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Mini Games Collection</h2>
+            <p>A collection of small, interactive games built with vanilla JavaScript. Includes memory games, puzzles, and simple arcade-style games with score tracking and local storage.</p>
+            <div class="project-gallery">
+                <div class="gallery-scroll">
+                    <img src="images/1minigame.png" alt="Mini Game Menu" class="gallery-img">
+                    <img src="images/2minigame.png" alt="Memory Game" class="gallery-img">
+                    <img src="images/3minigame.png" alt="Puzzle Game" class="gallery-img">
+                    <img src="images/4minigame.png" alt="Arcade Game" class="gallery-img">
+                    <img src="images/5minigame.png" alt="Score Board" class="gallery-img">
+                </div>
+            </div>
+            <div class="tech-used">
+                <span>HTML</span>
+                <span>CSS</span>
+                <span>JavaScript</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="wiki-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Wikipedia 2 - Fan Project</h2>
+            <p>A fan-made alternative interface for Wikipedia with enhanced search capabilities, modern UI design, and improved user experience with dark mode support.</p>
+            <div class="project-gallery">
+                <div class="gallery-scroll">
+                    <img src="images/1wiki.png" alt="Wikipedia Homepage" class="gallery-img">
+                    <img src="images/2wiki.png" alt="Search Results" class="gallery-img">
+                    <img src="images/3wiki.png" alt="Article View" class="gallery-img">
+                    <img src="images/4wiki.png" alt="Dark Mode" class="gallery-img">
+                    <img src="images/5wiki.png" alt="Mobile View" class="gallery-img">
+                </div>
+            </div>
+            <div class="tech-used">
+                <span>HTML</span>
+                <span>CSS</span>
+                <span>JavaScript</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="pixel-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Pixel Collector</h2>
+            <p>Pixel Collector is a mini-game with several difficulty levels and bonuses. There are several enemies, after each level, the number of enemies increases, bonuses can extend the game time, speed up the player, etc.</p>
+            <div class="project-gallery">
+                <div class="gallery-scroll">
+                    <img src="images/1pixel.png" alt="Pixel Art Canvas" class="gallery-img">
+                    <img src="images/2pixel.png" alt="Color Palette" class="gallery-img">
+                    <img src="images/3pixel.png" alt="Art Gallery" class="gallery-img">
+                    <img src="images/4pixel.png" alt="Drawing Tools" class="gallery-img">
+                </div>
+            </div>
+            <div class="tech-used">
+                <span>HTML</span>
+                <span>CSS</span>
+                <span>JavaScript</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="store-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>E-commerce Store</h2>
+            <p>Online store with product categories, shopping cart functionality, "about us", "contact us" section, and product modal windows.</p>
+            <div class="project-gallery">
+                <div class="gallery-scroll">
+                    <img src="images/store1.png" alt="Store Homepage" class="gallery-img">
+                    <img src="images/store2.png" alt="Product Catalog" class="gallery-img">
+                    <img src="images/store3.png" alt="Shopping Cart" class="gallery-img">
+                    <img src="images/store4.png" alt="Checkout Process" class="gallery-img">
+                </div>
+            </div>
+            <div class="tech-used">
+                <span>HTML</span>
+                <span>CSS</span>
+                <span>JavaScript</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="tickets-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>TicketsCenter</h2>
+            <p>A comprehensive ticket booking platform for events and concerts with interactive seat selection, payment processing simulation, and email confirmation system.</p>
+            <div class="project-gallery">
+                <div class="gallery-scroll">
+                    <img src="images/1toms.png" alt="Tickets Homepage" class="gallery-img">
+                    <img src="images/2toms.png" alt="Event Listings" class="gallery-img">
+                    <img src="images/3toms.png" alt="Seat Selection" class="gallery-img">
+                    <img src="images/4toms.png" alt="Booking Form" class="gallery-img">
+                    <img src="images/5toms.png" alt="Payment Process" class="gallery-img">
+                    <img src="images/6toms.png" alt="Confirmation" class="gallery-img">
+                </div>
+            </div>
+            <div class="tech-used">
+                <span>HTML</span>
+                <span>CSS</span>
+                <span>JavaScript</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="mood-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Mood Tracker</h2>
+            <p>A personal mood tracking application that helps users monitor their emotional well-being over time with interactive charts, statistics, and insightful analytics.</p>
+            <div class="project-gallery">
+                <div class="gallery-scroll">
+                    <img src="images/1mood.png" alt="Mood Dashboard" class="gallery-img">
+                    <img src="images/2mood.png" alt="Mood Entry" class="gallery-img">
+                    <img src="images/3mood.png" alt="Analytics Charts" class="gallery-img">
+                    <img src="images/4mood.png" alt="History View" class="gallery-img">
+                </div>
+            </div>
+            <div class="tech-used">
+                <span>HTML</span>
+                <span>CSS</span>
+                <span>JavaScript</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll to top button -->
+    <button class="scroll-top-btn" id="scroll-top-btn" title="Back to Top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <footer>
+        <div class="footer-section">
+            <h3>Contact Info</h3>
+            <p>Email: mikurasua@gmail.com</p>
+            <p>Telegram: @MaximalXP</p>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Maxim Mkrtchyan. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"> </script>
+</body>
+</html>
