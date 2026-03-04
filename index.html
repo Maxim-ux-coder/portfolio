@@ -2176,417 +2176,187 @@ html {
     </footer>
 
     <script>
-        // Device capability detection
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const isLowPowerDevice = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        // Mobile menu close / toggle helper
+// Paste this inside a <script> ... </script> in your index.html (just before </body>)
+// or save as a file and include it as an external script.
+//
+// Behavior:
+// - Finds a toggle button and the associated menu (tries several common selectors).
+// - Keeps aria-expanded on the toggle in sync.
+// - Closes the menu when a link inside it is clicked.
+// - Closes when clicking outside the open menu.
+// - Closes on Escape key.
+// - Closes on resize if viewport becomes wider than mobile breakpoint.
 
-        // Apply performance optimizations
-        if (isMobile || isLowPowerDevice || prefersReducedMotion) {
-            document.body.classList.add('reduce-motion');
-        }
+(function () {
+  'use strict';
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Enhanced Loading Screen with animated M
-            const loadingScreen = document.getElementById('loading-screen');
-            const logoParticles = document.getElementById('logo-particles');
-            
-            // Create logo particles animation
-            if (!isMobile && !prefersReducedMotion) {
-                for (let i = 0; i < 12; i++) {
-                    const particle = document.createElement('div');
-                    particle.className = 'logo-particle';
-                    particle.style.setProperty('--random-x', (Math.random() - 0.5) * 300 + 'px');
-                    particle.style.setProperty('--random-y', (Math.random() - 0.5) * 300 + 'px');
-                    particle.style.animationDelay = (i * 0.1) + 's';
-                    logoParticles.appendChild(particle);
-                }
-            }
+  // --- CONFIG: adjust breakpoint if your layout uses a different value ---
+  var MOBILE_BREAKPOINT = 768; // px
 
-            // Hide loading screen after animation
-            setTimeout(() => {
-                loadingScreen.classList.add('hide');
-                document.body.style.overflow = 'auto';
-                
-                // Initialize background particles after loading
-                if (!isMobile && !prefersReducedMotion) {
-                    initParticles();
-                }
-                
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                }, 500);
-            }, 2500);
+  // --- Common selector fallbacks (in order) ---
+  var toggleSelectors = [
+    '[data-mobile-toggle]',    // custom data attr
+    'button[aria-controls]',   // button referencing menu id
+    '.menu-toggle',
+    '.nav-toggle',
+    '#nav-toggle',
+    '.hamburger',
+    '.mobile-toggle'
+  ];
 
-            // Background particles system
-            function initParticles() {
-                const particlesContainer = document.getElementById('particles');
-                const particleCount = window.innerWidth > 1024 ? 50 : 20;
-                
-                for (let i = 0; i < particleCount; i++) {
-                    createParticle();
-                }
+  var menuSelectors = [
+    '[data-mobile-menu]', // custom data attr
+    '#nav-menu',
+    '.nav-menu',
+    '.mobile-menu',
+    'nav.mobile',
+    'nav'
+  ];
 
-                function createParticle() {
-                    const particle = document.createElement('div');
-                    particle.className = 'particle';
-                    particle.style.left = Math.random() * 100 + '%';
-                    particle.style.animationDelay = Math.random() * 6 + 's';
-                    particle.style.animationDuration = (6 + Math.random() * 4) + 's';
-                    particlesContainer.appendChild(particle);
+  // Helper: find toggle element
+  function findToggle() {
+    for (var i = 0; i < toggleSelectors.length; i++) {
+      var el = document.querySelector(toggleSelectors[i]);
+      if (el) return el;
+    }
+    return null;
+  }
 
-                    // Remove and recreate particle after animation
-                    setTimeout(() => {
-                        if (particlesContainer.contains(particle)) {
-                            particlesContainer.removeChild(particle);
-                            createParticle();
-                        }
-                    }, 10000);
-                }
-            }
+  // Helper: find menu element, possibly referenced by toggle's aria-controls
+  function findMenu(toggle) {
+    // If toggle has aria-controls pointing to the menu id, prefer that
+    try {
+      var controls = toggle && toggle.getAttribute && toggle.getAttribute('aria-controls');
+      if (controls) {
+        var byId = document.getElementById(controls);
+        if (byId) return byId;
+      }
+    } catch (e) { /* ignore */ }
 
-            // Enhanced Theme Toggle
-            const themeToggle = document.getElementById('theme-toggle');
-            const themeIcon = themeToggle.querySelector('i');
-            const currentTheme = localStorage.getItem('theme') || 'dark';
-            
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            updateThemeIcon(currentTheme);
-            
-            themeToggle.addEventListener('click', function() {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                
-                // Add transition effect
-                document.body.style.transition = 'all 0.3s ease';
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                updateThemeIcon(newTheme);
-                
-                // Reset transition
-                setTimeout(() => {
-                    document.body.style.transition = '';
-                }, 300);
-            });
-            
-            function updateThemeIcon(theme) {
-                if (theme === 'dark') {
-                    themeIcon.className = 'fas fa-sun';
-                } else {
-                    themeIcon.className = 'fas fa-moon';
-                }
-            }
+    for (var i = 0; i < menuSelectors.length; i++) {
+      var el = document.querySelector(menuSelectors[i]);
+      if (el) return el;
+    }
+    return null;
+  }
 
-            // Enhanced Mobile Navigation
-            const burger = document.querySelector('.burger');
-            const navLinks = document.querySelector('.nav-links');
-            
-            burger.addEventListener('click', function() {
-                navLinks.classList.toggle('active');
-                burger.classList.toggle('active');
-            });
+  var toggle = findToggle();
+  var menu = toggle ? findMenu(toggle) : findMenu({}); // try to find menu even if toggle not found
 
-            // Enhanced smooth scrolling
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (navLinks.classList.contains('active')) {
-                        navLinks.classList.remove('active');
-                        burger.classList.remove('active');
-                    }
-                    
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        const headerHeight = document.querySelector('header').offsetHeight;
-                        const targetPosition = target.offsetTop - headerHeight - 20;
-                        
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
+  if (!toggle || !menu) {
+    // If we can't find a matching pair, log a helpful message and do nothing.
+    // This avoids breaking pages without the expected markup.
+    if (typeof console !== 'undefined') {
+      console.warn('Mobile menu script: could not find toggle or menu. Toggle found:', !!toggle, 'Menu found:', !!menu);
+    }
+    return;
+  }
 
-            // Enhanced Intersection Observer
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -100px 0px'
-            };
+  // Determine which class shows the menu. Try to infer or use default.
+  var inferredOpenClass = null;
+  var candidateOpenClasses = ['open', 'is-open', 'is-active', 'active', 'show', 'visible'];
+  for (var j = 0; j < candidateOpenClasses.length; j++) {
+    if (menu.classList.contains(candidateOpenClasses[j])) {
+      inferredOpenClass = candidateOpenClasses[j];
+      break;
+    }
+  }
+  // if none inferred, use 'open'
+  var OPEN_CLASS = inferredOpenClass || 'open';
+  // optional class on toggle when active
+  var TOGGLE_ACTIVE_CLASS = 'is-active';
 
-            const observer = new IntersectionObserver(function(entries) {
-                entries.forEach((entry, index) => {
-                    if (entry.isIntersecting) {
-                        setTimeout(() => {
-                            entry.target.classList.add('visible');
-                        }, index * 200);
-                    }
-                });
-            }, observerOptions);
+  // Ensure toggle has an aria-expanded attribute
+  if (!toggle.hasAttribute('aria-expanded')) {
+    toggle.setAttribute('aria-expanded', 'false');
+  }
 
-            document.querySelectorAll('.animate-on-scroll').forEach(section => {
-                observer.observe(section);
-            });
+  function isOpen() {
+    return menu.classList.contains(OPEN_CLASS);
+  }
 
-            // Enhanced Portfolio Modal System
-            const portfolioItems = document.querySelectorAll('.portfolio-item');
-            const modals = document.querySelectorAll('.modal');
-            const closeButtons = document.querySelectorAll('.close');
-            
-            portfolioItems.forEach((item, index) => {
-                // Add staggered animation delay
-                item.style.animationDelay = (index * 0.1) + 's';
-                
-                item.addEventListener('click', function() {
-                    const projectName = this.getAttribute('data-project');
-                    const modal = document.getElementById(`${projectName}-modal`);
-                    if (modal) {
-                        modal.style.display = 'block';
-                        document.body.style.overflow = 'hidden';
-                        
-                        // Trigger entrance animation
-                        setTimeout(() => {
-                            modal.querySelector('.modal-content').style.opacity = '1';
-                            modal.querySelector('.modal-content').style.transform = 'translateY(0) scale(1)';
-                        }, 10);
-                    }
-                });
-            });
-            
-            closeButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const modal = this.closest('.modal');
-                    modal.style.display = 'none';
-                    document.body.style.overflow = 'auto';
-                });
-            });
-            
-            window.addEventListener('click', function(e) {
-                if (e.target.classList.contains('modal')) {
-                    e.target.style.display = 'none';
-                    document.body.style.overflow = 'auto';
-                }
-            });
+  function setAriaExpanded(value) {
+    try {
+      toggle.setAttribute('aria-expanded', value ? 'true' : 'false');
+    } catch (e) {}
+  }
 
-            // Enhanced Image Viewer
-            const galleryImages = document.querySelectorAll('.gallery-img');
-            const imageViewer = document.getElementById('image-viewer');
-            const fullscreenImage = document.getElementById('fullscreen-image');
-            const closeViewer = document.querySelector('.close-viewer');
-            const prevArrow = document.getElementById('prev-arrow');
-            const nextArrow = document.getElementById('next-arrow');
-            
-            let currentImageIndex = 0;
-            let currentImages = [];
-            
-            galleryImages.forEach((img, index) => {
-                img.addEventListener('click', function() {
-                    const galleryScroll = this.closest('.gallery-scroll');
-                    currentImages = Array.from(galleryScroll.querySelectorAll('.gallery-img'));
-                    currentImageIndex = currentImages.indexOf(this);
-                    
-                    fullscreenImage.src = this.src;
-                    fullscreenImage.alt = this.alt;
-                    imageViewer.style.display = 'flex';
-                    document.body.style.overflow = 'hidden';
-                    
-                    // Enhanced entrance animation
-                    fullscreenImage.style.transform = 'scale(0.7) rotate(5deg)';
-                    fullscreenImage.style.opacity = '0';
-                    setTimeout(() => {
-                        fullscreenImage.style.transform = 'scale(1) rotate(0deg)';
-                        fullscreenImage.style.opacity = '1';
-                    }, 100);
-                });
-            });
-            
-            function navigateImage(direction) {
-                currentImageIndex += direction;
-                if (currentImageIndex < 0) currentImageIndex = currentImages.length - 1;
-                if (currentImageIndex >= currentImages.length) currentImageIndex = 0;
-                
-                // Enhanced transition animation
-                fullscreenImage.style.transform = 'scale(0.8) rotateY(90deg)';
-                fullscreenImage.style.opacity = '0.3';
-                
-                setTimeout(() => {
-                    fullscreenImage.src = currentImages[currentImageIndex].src;
-                    fullscreenImage.alt = currentImages[currentImageIndex].alt;
-                    fullscreenImage.style.transform = 'scale(1) rotateY(0deg)';
-                    fullscreenImage.style.opacity = '1';
-                }, 200);
-            }
-            
-            prevArrow.addEventListener('click', (e) => {
-                e.stopPropagation();
-                navigateImage(-1);
-            });
-            
-            nextArrow.addEventListener('click', (e) => {
-                e.stopPropagation();
-                navigateImage(1);
-            });
-            
-            closeViewer.addEventListener('click', function() {
-                imageViewer.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            });
-            
-            imageViewer.addEventListener('click', function(e) {
-                if (e.target === imageViewer) {
-                    imageViewer.style.display = 'none';
-                    document.body.style.overflow = 'auto';
-                }
-            });
+  function openMenu() {
+    menu.classList.add(OPEN_CLASS);
+    toggle.classList.add(TOGGLE_ACTIVE_CLASS);
+    setAriaExpanded(true);
+  }
 
-            // Enhanced keyboard navigation
-            document.addEventListener('keydown', function(e) {
-                if (imageViewer.style.display === 'flex') {
-                    if (e.key === 'ArrowLeft') navigateImage(-1);
-                    if (e.key === 'ArrowRight') navigateImage(1);
-                    if (e.key === 'Escape') {
-                        imageViewer.style.display = 'none';
-                        document.body.style.overflow = 'auto';
-                    }
-                }
-            });
+  function closeMenu() {
+    menu.classList.remove(OPEN_CLASS);
+    toggle.classList.remove(TOGGLE_ACTIVE_CLASS);
+    setAriaExpanded(false);
+  }
 
-            // Enhanced scroll effects
-            let ticking = false;
-            function updateScrollEffects() {
-                const scrolled = window.pageYOffset;
-                const rate = scrolled * -0.5;
-                
-                // Parallax effect for hero sections (desktop only)
-                if (!isMobile) {
-                    const heroElements = document.querySelectorAll('.hero, .about-text');
-                    heroElements.forEach(element => {
-                        element.style.transform = `translateY(${rate * 0.1}px)`;
-                    });
-                }
-                
-                // Header background opacity
-                const header = document.querySelector('header');
-                const opacity = Math.min(scrolled / 100, 0.95);
-                header.style.background = `rgba(0, 0, 0, ${opacity})`;
-                
-                ticking = false;
-            }
+  function toggleMenu() {
+    if (isOpen()) closeMenu();
+    else openMenu();
+  }
 
-            window.addEventListener('scroll', function() {
-                if (!ticking) {
-                    requestAnimationFrame(updateScrollEffects);
-                    ticking = true;
-                }
-            });
+  // Toggle click handler
+  toggle.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleMenu();
+  });
 
-            // Enhanced scroll to top button
-            const scrollTopBtn = document.getElementById('scroll-top-btn');
-            
-            window.addEventListener('scroll', function() {
-                if (window.pageYOffset > 500) {
-                    scrollTopBtn.classList.add('visible');
-                } else {
-                    scrollTopBtn.classList.remove('visible');
-                }
-            });
-            
-            scrollTopBtn.addEventListener('click', function() {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
+  // Close when a link inside the menu is clicked (delegated)
+  menu.addEventListener('click', function (e) {
+    var link = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (!link) return;
+    // If the link has target="_blank" or is a hash-only link you might want
+    // to keep menu open in some cases. By default we close.
+    // Slight delay for in-page anchors to allow default scroll; adjust if needed.
+    var href = link.getAttribute('href') || '';
+    if (href.indexOf('#') === 0) {
+      // anchor link to same page - close after a short delay so the browser can jump
+      setTimeout(closeMenu, 50);
+    } else {
+      closeMenu();
+    }
+  });
 
-            // Skills animation on hover
-            const skillItems = document.querySelectorAll('.skills li');
-            skillItems.forEach((skill, index) => {
-                skill.style.animationDelay = (index * 0.1) + 's';
-                
-                if (!isMobile) {
-                    skill.addEventListener('mouseenter', function() {
-                        this.style.animationPlayState = 'paused';
-                    });
-                    
-                    skill.addEventListener('mouseleave', function() {
-                        this.style.animationPlayState = 'running';
-                    });
-                }
-            });
+  // Close when clicking outside the menu and toggle
+  document.addEventListener('click', function (e) {
+    if (!isOpen()) return;
+    var target = e.target || e.srcElement;
+    if (menu.contains(target) || toggle.contains(target)) return;
+    closeMenu();
+  });
 
-            // Enhanced floating elements
-            if (!isMobile && !prefersReducedMotion) {
-                const floatingElements = document.querySelectorAll('.floating');
-                floatingElements.forEach((element, index) => {
-                    element.style.animationDelay = `${index * 0.3}s`;
-                    element.style.animationDuration = `${3 + (index % 3)}s`;
-                });
-            }
+  // Close on Escape key
+  document.addEventListener('keydown', function (e) {
+    var key = e.key || e.keyCode;
+    if ((key === 'Escape' || key === 'Esc' || key === 27) && isOpen()) {
+      closeMenu();
+    }
+  });
 
-            // Performance monitoring
-            if ('performance' in window) {
-                window.addEventListener('load', function() {
-                    setTimeout(() => {
-                        const perfData = performance.getEntriesByType('navigation')[0];
-                        if (perfData.loadEventEnd - perfData.loadEventStart > 3000) {
-                            document.body.classList.add('reduce-motion');
-                        }
-                    }, 1000);
-                });
-            }
+  // Close if viewport resized above breakpoint
+  var lastWidth = window.innerWidth;
+  window.addEventListener('resize', function () {
+    // Only act when crossing the breakpoint to avoid extra churn
+    var w = window.innerWidth;
+    if (lastWidth <= MOBILE_BREAKPOINT && w > MOBILE_BREAKPOINT && isOpen()) {
+      closeMenu();
+    }
+    lastWidth = w;
+  });
 
-            // Preload critical images
-            const criticalImages = [
-                'images/movie1.png',
-                'images/1minigame.png', 
-                'images/1wiki.png',
-                'images/1pixel.png',
-                'images/store1.png',
-                'images/1toms.png',
-                'images/1mood.png'
-            ];
+  // Optional: expose controls for debugging or custom triggers
+  // window.__mobileMenu = { open: openMenu, close: closeMenu, toggle: toggleMenu };
 
-            if (!isMobile) {
-                criticalImages.forEach(src => {
-                    const img = new Image();
-                    img.src = src;
-                });
-            }
+  // Ensure initial aria state matches the menu
+  setAriaExpanded(isOpen());
 
-            // Add touch gestures for mobile
-            if (isMobile) {
-                let touchStartX = 0;
-                let touchStartY = 0;
-                
-                imageViewer.addEventListener('touchstart', function(e) {
-                    touchStartX = e.touches[0].clientX;
-                    touchStartY = e.touches[0].clientY;
-                });
-                
-                imageViewer.addEventListener('touchend', function(e) {
-                    const touchEndX = e.changedTouches[0].clientX;
-                    const touchEndY = e.changedTouches[0].clientY;
-                    const deltaX = touchStartX - touchEndX;
-                    const deltaY = touchStartY - touchEndY;
-                    
-                    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                        if (Math.abs(deltaX) > 50) {
-                            if (deltaX > 0) {
-                                navigateImage(1); // Swipe left - next image
-                            } else {
-                                navigateImage(-1); // Swipe right - previous image
-                            }
-                        }
-                    }
-                });
-            }
-
-            console.log('🎨 Portfolio enhanced with advanced animations and optimizations!');
-            console.log(`📱 Device: ${isMobile ? 'Mobile' : 'Desktop'}`);
-            console.log(`⚡ Performance mode: ${document.body.classList.contains('reduce-motion') ? 'Optimized' : 'Full animations'}`);
-        });
+  // Done
+})();
     </script>
 </body>
-</html>
-
-
+    </html>
